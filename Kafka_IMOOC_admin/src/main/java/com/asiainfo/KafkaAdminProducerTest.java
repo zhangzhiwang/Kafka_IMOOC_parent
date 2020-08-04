@@ -20,7 +20,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 public class KafkaAdminProducerTest {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		// 构建producer客户端对象
-		Properties properties = new Properties();
+		Properties properties = new Properties();// 实际项目中properties的值可以写到配置文件里面
 		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");// 要连接的kafka地址
 		properties.put(ProducerConfig.ACKS_CONFIG, "all");
 		properties.put(ProducerConfig.RETRIES_CONFIG, "0");

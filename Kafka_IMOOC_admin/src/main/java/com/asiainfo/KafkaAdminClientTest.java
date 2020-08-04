@@ -86,7 +86,7 @@ public class KafkaAdminClientTest {
 		System.out.println("describeTopicMap : " + describeTopicMap);
 
 		// 查询topic的配置信息
-		ConfigResource configResource = new ConfigResource(ConfigResource.Type.TOPIC, "topicName");
+		ConfigResource configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
 //		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource));// 不带选项
 		DescribeConfigsOptions describeConfigsOptions = new DescribeConfigsOptions();
 		describeConfigsOptions.includeSynonyms(true);
@@ -96,14 +96,14 @@ public class KafkaAdminClientTest {
 
 		// 修改topic的配置信息
 		Map<ConfigResource, Collection<AlterConfigOp>> map = new HashMap<ConfigResource, Collection<AlterConfigOp>>();
-		ConfigResource cr = new ConfigResource(ConfigResource.Type.TOPIC, "topicName");// 设置要修改的topic名称
+		ConfigResource cr = new ConfigResource(ConfigResource.Type.TOPIC, topicName);// 设置要修改的topic名称
 		AlterConfigOp alterConfigOp = new AlterConfigOp(new ConfigEntry("preallocate", "true"), OpType.SET);// 第一个参数是要修改的属性，第二个参数是操作的类型（SET为修改）
 
 		map.put(cr, Arrays.asList(alterConfigOp));
 		adminClient.incrementalAlterConfigs(map);
 
 		// 修改完再查询以下topic的配置信息，看是否修改成功
-		configResource = new ConfigResource(ConfigResource.Type.TOPIC, "topicName");
+		configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
 		describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource));
 		configResourceMap = describeConfigsResult.all().get();
 		System.out.println("configResourceMap : " + configResourceMap);
