@@ -32,19 +32,19 @@ public class KafkaAdminProducerTest {
 		Producer<String, String> producer = new KafkaProducer<String, String>(properties);
 		
 		String topicName = "topicName1";
-		for(int i =0; i < 10; i++) {
+		for(int i =0; i < 100; i++) {
 			// kafka发送的消息要包装在ProducerRecord中，一个ProducerRecord就是一条被发送到kafka的消息
 			ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topicName, "key-" + i, "value-" + i);
-//			producer.send(producerRecord);// kafka是异步发送数据的
+			producer.send(producerRecord);// kafka是异步发送数据的
 //			Future<RecordMetadata> result = producer.send(producerRecord);// send方法的返回值是个Future，Future在get的时候会阻塞当前线程，所以不使用send方法的返回值就是异步发送，使用了send方法返回值就是同步发送
 //			RecordMetadata recordMetadata = result.get();// kafka是同步发送数据还是异步发送数据取决于用不用send方法的返回值
 //			System.out.println("recordMetadata : " + recordMetadata);
 			
-			producer.send(producerRecord, new Callback() {// 带回调的发送方法
-				@Override
-				public void onCompletion(RecordMetadata recordMetadata, Exception exception) {
-					System.out.println("call back recordMetadata : " + recordMetadata);
-				}});
+//			producer.send(producerRecord, new Callback() {// 带回调的发送方法
+//				@Override
+//				public void onCompletion(RecordMetadata recordMetadata, Exception exception) {
+//					System.out.println("call back recordMetadata : " + recordMetadata);
+//				}});
 		}
 		
 		// producer用完之后要关闭
