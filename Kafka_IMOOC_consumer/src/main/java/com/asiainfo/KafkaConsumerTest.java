@@ -22,14 +22,14 @@ import org.apache.kafka.common.TopicPartition;
  */
 public class KafkaConsumerTest {
 	public static void main(String[] args) {
-//		autoCommit();
+		autoCommit();
 //		manualCommit();
 //		manualCommitMutiThread();
 //		consumeOnePartition();
 //		consumeOnePartitionMultiThread(3);
 //		consumeThreadPool();
 //		consumeOffset();
-		controlPause();
+//		controlPause();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class KafkaConsumerTest {
 	private static void autoCommit() {
 		// 构建kafka消费者客户端
 		Properties properties = new Properties();
-		properties.setProperty("bootstrap.servers", "localhost:9092");// 要链接的kafka地址
+		properties.setProperty("bootstrap.servers", "z1:9092");// 要链接的kafka地址
 		// 注意：同一个partition的消息只能被处在同一个group下的某一个consumer消费，一个consumer可以消费多个partition的消息，即一对多关系，但是反过来一个partition只对应一个consumer。所以在一个group里，consumer的数量如果多余partition的数量，则多出来的consumer不会消费任何数据处于空闲状态。
 		properties.setProperty("group.id", "test_group");// consumer的group，若干个consumer是互相独立的，它们可以组成一个组且拥有一个同样的组id。
 		properties.setProperty("enable.auto.commit", "true");// 自动提交offset

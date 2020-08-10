@@ -21,7 +21,7 @@ public class KafkaAdminProducerTest {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		// 构建producer客户端对象
 		Properties properties = new Properties();// 实际项目中properties的值可以写到配置文件里面
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");// 要连接的kafka地址
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "z1:9092");// 要连接的kafka地址
 		properties.put(ProducerConfig.ACKS_CONFIG, "all");
 		properties.put(ProducerConfig.RETRIES_CONFIG, "0");
 		properties.put(ProducerConfig.BATCH_SIZE_CONFIG, "16384");
@@ -29,6 +29,12 @@ public class KafkaAdminProducerTest {
 		properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, "123321");
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+		
+//		properties.put("security.protocol","SSL");
+//		properties.put("sl.endpoint.identification.algorithm","");
+//		properties.put("ssl.truststore.location","client.truststore.jks");
+//		properties.put("ssl.truststore.password","zzw1234");
+		
 		Producer<String, String> producer = new KafkaProducer<String, String>(properties);
 		
 		String topicName = "topicName1";
@@ -51,3 +57,4 @@ public class KafkaAdminProducerTest {
 		producer.close();
 	}
 }
+	
