@@ -1,0 +1,9 @@
+server:
+  port: 8081
+  
+spring:
+  application:
+    name: config-client
+    
+user_name: lisi
+user_age: 19

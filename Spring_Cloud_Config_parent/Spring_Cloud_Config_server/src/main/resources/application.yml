@@ -1,0 +1,14 @@
+server:
+  port: 8090
+  
+spring:
+  application:
+    name: config-server
+  cloud:
+    config: 
+      server:
+        git:
+          uri: https://github.com/zhangzhiwang/SpringCloud_MengXueGu_config_repo.git
+          username: liming8909
+          password: Areyouhapp25?
+      label: master #git仓库的分支

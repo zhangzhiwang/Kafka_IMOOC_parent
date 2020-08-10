@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    config:
+      uri:
+      - http://localhost:8090
+      name: kafka-spring-cloud-server
+      label: master
+    stream: 
+      kafka: 
+        binder: 
+          zkNodes: z1:2181,z2:2181,z3:2181
+          brokers: z1:9092,z2:9092,z3:9092
+   
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 
+        - health
+        - info
+        - refresh #访问：http://localhost:8081/actuator/refresh
+        - bus-refresh #访问：http://localhost:8081/actuator/bus-refresh
