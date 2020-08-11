@@ -21,7 +21,7 @@ public class KafkaAdminProducerTest {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		// 构建producer客户端对象
 		Properties properties = new Properties();// 实际项目中properties的值可以写到配置文件里面
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "z1:9092");// 要连接的kafka地址
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092,127.0.0.1:9093");// 要连接的kafka地址
 		properties.put(ProducerConfig.ACKS_CONFIG, "all");
 		properties.put(ProducerConfig.RETRIES_CONFIG, "0");
 		properties.put(ProducerConfig.BATCH_SIZE_CONFIG, "16384");
@@ -29,6 +29,7 @@ public class KafkaAdminProducerTest {
 		properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, "123321");
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+		properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, "com.asiainfo.MyPartitioner");
 		
 //		properties.put("security.protocol","SSL");
 //		properties.put("sl.endpoint.identification.algorithm","");
@@ -37,14 +38,14 @@ public class KafkaAdminProducerTest {
 		
 		Producer<String, String> producer = new KafkaProducer<String, String>(properties);
 		
-		String topicName = "topicName1";
-		for(int i =0; i < 100; i++) {
+		String topicName = "topicName2";
+		for(int i =0; i < 10; i++) {
 			// kafka发送的消息要包装在ProducerRecord中，一个ProducerRecord就是一条被发送到kafka的消息
-			ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topicName, "key-" + i, "value-" + i);
-			producer.send(producerRecord);// kafka是异步发送数据的
-//			Future<RecordMetadata> result = producer.send(producerRecord);// send方法的返回值是个Future，Future在get的时候会阻塞当前线程，所以不使用send方法的返回值就是异步发送，使用了send方法返回值就是同步发送
-//			RecordMetadata recordMetadata = result.get();// kafka是同步发送数据还是异步发送数据取决于用不用send方法的返回值
-//			System.out.println("recordMetadata : " + recordMetadata);
+			ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topicName, "" + i, "value-" + i);
+//			producer.send(producerRecord);// kafka是异步发送数据的
+			Future<RecordMetadata> result = producer.send(producerRecord);// send方法的返回值是个Future，Future在get的时候会阻塞当前线程，所以不使用send方法的返回值就是异步发送，使用了send方法返回值就是同步发送
+			RecordMetadata recordMetadata = result.get();// kafka是同步发送数据还是异步发送数据取决于用不用send方法的返回值
+			System.out.println("recordMetadata : " + recordMetadata.partition() + " -> " + recordMetadata.offset());
 			
 //			producer.send(producerRecord, new Callback() {// 带回调的发送方法
 //				@Override

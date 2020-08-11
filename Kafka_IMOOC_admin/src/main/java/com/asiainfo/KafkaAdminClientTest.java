@@ -45,10 +45,10 @@ public class KafkaAdminClientTest {
 		AdminClient adminClient = AdminClient.create(props);
 
 		// 创建topic
-		String topicName = "topicName1";
+		String topicName = "topicName2";
 		NewTopic newTopic = new NewTopic(topicName, // topic名称
-				1, // 分区数量
-				(short) 1);// 副本因子
+				2, // 分区数量
+				(short) 2);// 副本因子
 		List<NewTopic> newTopicList = new ArrayList<>();
 		newTopicList.add(newTopic);
 		// 相当于命令行：bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic topicName
@@ -57,64 +57,64 @@ public class KafkaAdminClientTest {
 
 		// 查看topic
 //		ListTopicsResult listTopics = adminClient.listTopics();// 获取自定义的kafka topic，内置的topic不会返回
-		ListTopicsOptions listTopicsOptions = new ListTopicsOptions();
-		listTopicsOptions.listInternal(true);// 查询内置的topic
-		ListTopicsResult listTopics = adminClient.listTopics(listTopicsOptions);// 要想查询内置的topic就要调用该方法，效果相当于命令：bin/kafka-topics.sh --list --zookeeper localhost:2181
-		Set<String> topicSet = listTopics.names().get();
-		System.out.println("topicSet : " + topicSet);
-
-		Collection<TopicListing> topicListings = listTopics.listings().get();
-		System.out.println("topicListings : " + topicListings);
-
-		Map<String, TopicListing> topicListingMap = listTopics.namesToListings().get();
-		System.out.println("topicListingMap : " + topicListingMap);
-
-		// 删除topic
-//		List<String> delTopics = new ArrayList<String>();
-//		delTopics.add("topicName");
-//		DeleteTopicsResult deleteTopics = adminClient.deleteTopics(delTopics);
-//		listTopics = adminClient.listTopics();// 删除完再查询一下看是否删除掉了
-//		topicSet = listTopics.names().get();
+//		ListTopicsOptions listTopicsOptions = new ListTopicsOptions();
+//		listTopicsOptions.listInternal(true);// 查询内置的topic
+//		ListTopicsResult listTopics = adminClient.listTopics(listTopicsOptions);// 要想查询内置的topic就要调用该方法，效果相当于命令：bin/kafka-topics.sh --list --zookeeper localhost:2181
+//		Set<String> topicSet = listTopics.names().get();
 //		System.out.println("topicSet : " + topicSet);
-
-		// 查询topic的描述信息
-//		DescribeTopicsResult describeTopics = adminClient.describeTopics(Arrays.asList(""));
-		DescribeTopicsOptions describeTopicsOptions = new DescribeTopicsOptions();
-		describeTopicsOptions.includeAuthorizedOperations(true);// 返回的topic信息是否包括有关授权的一些信息，默认为false
-		DescribeTopicsResult describeTopics = adminClient.describeTopics(Arrays.asList(topicName), describeTopicsOptions);
-		Map<String, TopicDescription> describeTopicMap = describeTopics.all().get();
-		System.out.println("describeTopicMap : " + describeTopicMap);
-
-		// 查询topic的配置信息
-		ConfigResource configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
-//		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource));// 不带选项
-		DescribeConfigsOptions describeConfigsOptions = new DescribeConfigsOptions();
-		describeConfigsOptions.includeSynonyms(true);
-		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource), describeConfigsOptions);// 带选项
-		Map<ConfigResource, Config> configResourceMap = describeConfigsResult.all().get();
-		System.out.println("configResourceMap : " + configResourceMap);
-
-		// 修改topic的配置信息
-		Map<ConfigResource, Collection<AlterConfigOp>> map = new HashMap<ConfigResource, Collection<AlterConfigOp>>();
-		ConfigResource cr = new ConfigResource(ConfigResource.Type.TOPIC, topicName);// 设置要修改的topic名称
-		AlterConfigOp alterConfigOp = new AlterConfigOp(new ConfigEntry("preallocate", "true"), OpType.SET);// 第一个参数是要修改的属性，第二个参数是操作的类型（SET为修改）
-
-		map.put(cr, Arrays.asList(alterConfigOp));
-		adminClient.incrementalAlterConfigs(map);
-
-		// 修改完再查询以下topic的配置信息，看是否修改成功
-		configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
-		describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource));
-		configResourceMap = describeConfigsResult.all().get();
-		System.out.println("configResourceMap : " + configResourceMap);
-		
-		// 为topic增加partition
-		NewPartitions newPartition = NewPartitions.increaseTo(3);// 从方法名increaseTo可以看出本方法是“增加到”而不是“增加”，增加到3个即增加后一共有3个partition
-		Map<String, NewPartitions> newPartitionMap = new HashMap<String, NewPartitions>();
-		newPartitionMap.put(topicName, newPartition);
-		adminClient.createPartitions(newPartitionMap);
-		
-		Map<String, TopicDescription> describeTopicMap2 = describeTopics.all().get();
-		System.out.println("describeTopicMap2 : " + describeTopicMap2);
+//
+//		Collection<TopicListing> topicListings = listTopics.listings().get();
+//		System.out.println("topicListings : " + topicListings);
+//
+//		Map<String, TopicListing> topicListingMap = listTopics.namesToListings().get();
+//		System.out.println("topicListingMap : " + topicListingMap);
+//
+//		// 删除topic
+////		List<String> delTopics = new ArrayList<String>();
+////		delTopics.add("topicName");
+////		DeleteTopicsResult deleteTopics = adminClient.deleteTopics(delTopics);
+////		listTopics = adminClient.listTopics();// 删除完再查询一下看是否删除掉了
+////		topicSet = listTopics.names().get();
+////		System.out.println("topicSet : " + topicSet);
+//
+//		// 查询topic的描述信息
+////		DescribeTopicsResult describeTopics = adminClient.describeTopics(Arrays.asList(""));
+//		DescribeTopicsOptions describeTopicsOptions = new DescribeTopicsOptions();
+//		describeTopicsOptions.includeAuthorizedOperations(true);// 返回的topic信息是否包括有关授权的一些信息，默认为false
+//		DescribeTopicsResult describeTopics = adminClient.describeTopics(Arrays.asList(topicName), describeTopicsOptions);
+//		Map<String, TopicDescription> describeTopicMap = describeTopics.all().get();
+//		System.out.println("describeTopicMap : " + describeTopicMap);
+//
+//		// 查询topic的配置信息
+//		ConfigResource configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+////		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource));// 不带选项
+//		DescribeConfigsOptions describeConfigsOptions = new DescribeConfigsOptions();
+//		describeConfigsOptions.includeSynonyms(true);
+//		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource), describeConfigsOptions);// 带选项
+//		Map<ConfigResource, Config> configResourceMap = describeConfigsResult.all().get();
+//		System.out.println("configResourceMap : " + configResourceMap);
+//
+//		// 修改topic的配置信息
+//		Map<ConfigResource, Collection<AlterConfigOp>> map = new HashMap<ConfigResource, Collection<AlterConfigOp>>();
+//		ConfigResource cr = new ConfigResource(ConfigResource.Type.TOPIC, topicName);// 设置要修改的topic名称
+//		AlterConfigOp alterConfigOp = new AlterConfigOp(new ConfigEntry("preallocate", "true"), OpType.SET);// 第一个参数是要修改的属性，第二个参数是操作的类型（SET为修改）
+//
+//		map.put(cr, Arrays.asList(alterConfigOp));
+//		adminClient.incrementalAlterConfigs(map);
+//
+//		// 修改完再查询以下topic的配置信息，看是否修改成功
+//		configResource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+//		describeConfigsResult = adminClient.describeConfigs(Arrays.asList(configResource));
+//		configResourceMap = describeConfigsResult.all().get();
+//		System.out.println("configResourceMap : " + configResourceMap);
+//		
+//		// 为topic增加partition
+//		NewPartitions newPartition = NewPartitions.increaseTo(3);// 从方法名increaseTo可以看出本方法是“增加到”而不是“增加”，增加到3个即增加后一共有3个partition
+//		Map<String, NewPartitions> newPartitionMap = new HashMap<String, NewPartitions>();
+//		newPartitionMap.put(topicName, newPartition);
+//		adminClient.createPartitions(newPartitionMap);
+//		
+//		Map<String, TopicDescription> describeTopicMap2 = describeTopics.all().get();
+//		System.out.println("describeTopicMap2 : " + describeTopicMap2);
 	}
 }
